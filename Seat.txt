@@ -1,0 +1,27 @@
+// SPDX-License-Identifier: GPL-3.0
+
+pragma solidity ^0.8.0;
+
+contract Seat{
+    
+    string private _title;
+    string private _date;
+    bool private _available;
+    int private _price;
+    string private _seat_number;
+    string private _row;
+    string private _link_seat_view;
+    address private owner;
+    
+    
+    
+    constructor(string memory title_, string memory date_, int price_, string memory seat_number_, string memory row_, string memory link_seat_view_){
+        _title = title_;
+        _date = date_;
+        _available = true;
+        _price = price_;
+        _seat_number = seat_number_;
+        _row = row_;
+        _link_seat_view = link_seat_view_;
+    }
+}
