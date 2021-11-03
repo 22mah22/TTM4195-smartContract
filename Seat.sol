@@ -2,11 +2,12 @@
 
 pragma solidity ^0.8.0;
 
+import "@bokkypoobah/BokkyPooBahsDateTimeLibrary/contracts/BokkyPooBahsDateTimeLibrary.sol"
+
 contract Seat{
     
-    // string private _title;
-    // string private _date;
-    
+    string private _title;
+    string private _date;
     // true if seat is for sale
     bool private _available;
     uint private _price;
@@ -24,19 +25,35 @@ contract Seat{
         _owner = owner_;
     }
     
+    function listForSale(unit8 _sellprice) public isOwner{
+        _price = _sellprice;
+        _available = true;
+    }
+    
+    modifier isOwner() {
+        require( msg.sender = _owner);
+        _;
+    }
+    
     modifier isForSale() {
         require( _available == true, "Seat not for sale" );
         _;
     }
     
-     modifier costs(uint _price) {
-      if (msg.sender >= _price) {
+    modifier paymentValid() {
+      if (msg.value >= _price) {
          _;
       }
    }
+   
+    // TODO check that date is not passed for event
+    // modifier isValidDate() {
+    //    if (timestampToDate(uint ))
+    //    _;
+    // }
     
-    function changeOwner(string memory address payable address_) public {
-        _owner = address_;
+    function tradeTicket() public isForSale paymentValid {
+        _owner = msg.sender;
+        _available = false;
     }
-    
 }
