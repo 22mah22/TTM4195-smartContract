@@ -4,6 +4,7 @@ pragma solidity ^0.8.0;
 
 // import files
 import "./Seat.sol";
+import "@bokkypoobah/BokkyPooBahsDateTimeLibrary/contracts/BokkyPooBahsDateTimeLibrary.sol"
 
 contract TicketBookingSystem{
     string private _title;
@@ -17,7 +18,7 @@ contract TicketBookingSystem{
     address payable public buyer;
     
     
-    constructor(string memory title_, string memory date_, int available_seats_) {
+    constructor(string memory title_, string memory date_, uint8 available_seats_) {
         _title = title_;
         _date = date_;
         _available_seats = available_seats_;
@@ -52,7 +53,7 @@ contract TicketBookingSystem{
         seat = check_available_seats();
         seller.transfer(seat.price);
         seat.available_ = false;            //perhaps have seat[id] instead of only seat
-    } 
+    }
     
     // function for checking the next available seat
     function check_available_seats() private {
