@@ -2,12 +2,17 @@
 
 pragma solidity ^0.8.0;
 
+// import files
+import "./Seat.sol";
 
 contract TicketBookingSystem{
     string private _title;
     string private _date;
     int private _available_seats;
     Seat[] private seats;
+
+    // Should this be in seat?
+    // TODO Change seller to better var name
     address payable public seller;
     address payable public buyer;
     
@@ -49,7 +54,7 @@ contract TicketBookingSystem{
         seat.available_ = false;            //perhaps have seat[id] instead of only seat
     } 
     
-    //function for checking the next available seat
+    // function for checking the next available seat
     function check_available_seats() private {
         for(i=0; i <= available_seats_; i++){
             if (seats[i].available_) {
