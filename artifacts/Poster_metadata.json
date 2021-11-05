@@ -166,6 +166,24 @@
 				"type": "function"
 			},
 			{
+				"inputs": [
+					{
+						"internalType": "address",
+						"name": "_to",
+						"type": "address"
+					},
+					{
+						"internalType": "uint256",
+						"name": "_tokenId",
+						"type": "uint256"
+					}
+				],
+				"name": "mint",
+				"outputs": [],
+				"stateMutability": "nonpayable",
+				"type": "function"
+			},
+			{
 				"inputs": [],
 				"name": "name",
 				"outputs": [
@@ -481,11 +499,11 @@
 			]
 		},
 		"Poster.sol": {
-			"keccak256": "0xd166775df7913a04732a63cc819f740d3dabd113c098f17b4722b60e46e1f971",
+			"keccak256": "0x9f1c07a06e463239a7fd346b2f2686210ba94f16ee6049567846765b74c7238c",
 			"license": "MIT",
 			"urls": [
-				"bzz-raw://670f54d215cf9b6914fc01e905a92360fc9dd435780ffa6ed58f9d136ec3d20e",
-				"dweb:/ipfs/QmSjFYpPDF2G8wCzKdjuQCWcpeLhcnJzs8QfsXbET5L4Lz"
+				"bzz-raw://f3b775ab2b28b2f59da0ac9560a4cf15e2974a4e5d5899f1f6d9561a99e973a5",
+				"dweb:/ipfs/QmYRHMFcHfZLqvsbF9mmJfKnmopd8hAtwEt58TfgwTAiMx"
 			]
 		}
 	},

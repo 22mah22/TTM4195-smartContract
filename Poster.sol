@@ -8,6 +8,10 @@ contract Poster is ERC721{
     constructor() ERC721("Poster", "PST"){
         
     }
+    
+    function mint(address _to, uint256 _tokenId) external {
+        super._mint(_to, _tokenId);
+        }
 }
 
 

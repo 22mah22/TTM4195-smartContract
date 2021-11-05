@@ -5,12 +5,15 @@ pragma solidity ^0.8.0;
 // import files
 import "./Seat.sol";
 import "@bokkypoobah/BokkyPooBahsDateTimeLibrary/contracts/BokkyPooBahsDateTimeLibrary.sol";
+import "./Ticket.sol";
+import "./Poster.sol";
 
 contract TicketBookingSystem{
     string private _title;
     string private _date;
     int private _available_seats;
     Seat[] private seats;
+    Ticket private tickets(_available_seats);
 
     // Should this be in seat?
     // TODO Change seller to better var name
@@ -27,6 +30,8 @@ contract TicketBookingSystem{
             Seat storage newStorage = Seat(title_, date_, 10, i, 1, "link")[i];
             seats.push(newStorage);
         }
+        
+        
     }
     
     // Define a modifier for a function that only the buyer can call
@@ -58,6 +63,8 @@ contract TicketBookingSystem{
         seat = check_available_seats();
         seller.transfer(seat.price);
         seat.available_ = false;            //perhaps have seat[id] instead of only seat
+        
+    
     }
     
     // function for checking the next available seat
@@ -67,5 +74,6 @@ contract TicketBookingSystem{
                 return seats[i];
             } 
         }
+        
     }
 }
