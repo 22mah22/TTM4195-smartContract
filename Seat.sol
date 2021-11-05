@@ -42,9 +42,8 @@ contract Seat{
     }
     
     modifier paymentValid() {
-      if (msg.value >= _price) {
+        require (msg.value >= _price, "not enough Ethereum paid");
          _;
-      }
    }
    
     // TODO check that date is not passed for event

@@ -41,6 +41,11 @@ contract TicketBookingSystem{
         _;
     }
     
+    modifier paymentValid() {
+        require (msg.value >= _price, "not enough Ethereum paid");
+         _;
+   }
+    
     modifier condition(bool _condition) {
         require(_condition);
         _;
