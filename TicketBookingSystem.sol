@@ -4,7 +4,7 @@ pragma solidity ^0.8.0;
 
 // import files
 import "./Seat.sol";
-import "@bokkypoobah/BokkyPooBahsDateTimeLibrary/contracts/BokkyPooBahsDateTimeLibrary.sol"
+import "@bokkypoobah/BokkyPooBahsDateTimeLibrary/contracts/BokkyPooBahsDateTimeLibrary.sol";
 
 contract TicketBookingSystem{
     string private _title;

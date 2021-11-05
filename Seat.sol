@@ -2,7 +2,7 @@
 
 pragma solidity ^0.8.0;
 
-import "@bokkypoobah/BokkyPooBahsDateTimeLibrary/contracts/BokkyPooBahsDateTimeLibrary.sol"
+import "@bokkypoobah/BokkyPooBahsDateTimeLibrary/contracts/BokkyPooBahsDateTimeLibrary.sol";
 
 contract Seat{
     
@@ -16,7 +16,8 @@ contract Seat{
     string private _link_seat_view;
     address private _owner;
     
-    constructor(string memory title_, string memory date_, uint price_, string memory seat_number_, string memory row_, string memory link_seat_view_, address payable public memory owner_){
+
+    constructor(string memory title_, string memory date_, uint price_, string memory seat_number_, string memory row_, string memory link_seat_view_, address payable  memory owner_){
         _available = false;
         _price = price_;
         _seat_number = seat_number_;
