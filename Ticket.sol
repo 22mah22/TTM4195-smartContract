@@ -9,8 +9,10 @@ contract Ticket is ERC721{
     using Counters for Counters.Counter;
     Counters.Counter private _tokenIds;
     
-    constructor(uint256 _available_seats) ERC721("Ticket", "TCT"){
-        totalSupply_ = _available_seats;
+    uint8 totalSupply;
+    
+    constructor(uint8 _available_seats) ERC721("Ticket", "TCT"){
+        totalSupply = _available_seats;
     }
     
     function mint(address _to, uint256 _tokenId) external {
