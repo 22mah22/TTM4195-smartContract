@@ -6,7 +6,13 @@
 	"output": {
 		"abi": [
 			{
-				"inputs": [],
+				"inputs": [
+					{
+						"internalType": "uint8",
+						"name": "_available_seats",
+						"type": "uint8"
+					}
+				],
 				"stateMutability": "nonpayable",
 				"type": "constructor"
 			},
@@ -412,7 +418,7 @@
 	},
 	"settings": {
 		"compilationTarget": {
-			"Poster.sol": "Poster"
+			"Ticket.sol": "Ticket"
 		},
 		"evmVersion": "london",
 		"libraries": {},
@@ -474,6 +480,14 @@
 				"dweb:/ipfs/QmWcsmkVr24xmmjfnBQZoemFniXjj3vwT78Cz6uqZW1Hux"
 			]
 		},
+		"@openzeppelin/contracts/utils/Counters.sol": {
+			"keccak256": "0x78450f4e3b722cce467b21e285f72ce5eaf361e9ba9dd2241a413926246773cd",
+			"license": "MIT",
+			"urls": [
+				"bzz-raw://f103065051300cd995fd4599ba91188d4071b92175b52f26110e02db091617c0",
+				"dweb:/ipfs/QmSyDz67R2HCypDE8Pacn3voVwxw9x17NM66q47YgBnGqc"
+			]
+		},
 		"@openzeppelin/contracts/utils/Strings.sol": {
 			"keccak256": "0x391d3ba97ab6856a16b225d6ee29617ad15ff00db70f3b4df1ab5ea33aa47c9d",
 			"license": "MIT",
@@ -498,12 +512,12 @@
 				"dweb:/ipfs/QmcsVgLgzWdor3UnAztUkXKNGcysm1MPneWksF72AvnwBx"
 			]
 		},
-		"Poster.sol": {
-			"keccak256": "0x9f1c07a06e463239a7fd346b2f2686210ba94f16ee6049567846765b74c7238c",
+		"Ticket.sol": {
+			"keccak256": "0xb65b20ba49df933a5a26ab4fc0b91f3e5ad1fb78be8b744c130205f36971be40",
 			"license": "MIT",
 			"urls": [
-				"bzz-raw://f3b775ab2b28b2f59da0ac9560a4cf15e2974a4e5d5899f1f6d9561a99e973a5",
-				"dweb:/ipfs/QmYRHMFcHfZLqvsbF9mmJfKnmopd8hAtwEt58TfgwTAiMx"
+				"bzz-raw://c07107d578923b8139f3e7f2da3e668fdda8d12608c304fbd86536ea2a4216aa",
+				"dweb:/ipfs/QmQBwgkVLyfBJ5FrqG3wyJ2MsMpqJVnz6uEpiQbHtaP9q9"
 			]
 		}
 	},

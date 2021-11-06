@@ -5,18 +5,24 @@ pragma solidity ^0.8.0;
 // import files
 import "./Seat.sol";
 import "@bokkypoobah/BokkyPooBahsDateTimeLibrary/contracts/BokkyPooBahsDateTimeLibrary.sol";
+import "./Ticket.sol";
+import "./Poster.sol";
 
 contract TicketBookingSystem{
     string private _title;
     string private _date;
-    int private _available_seats;
+    uint8 private _available_seats;
     Seat[] private seats;
+    Ticket private tickets = Ticket(available_seats_);
 
     // Should this be in seat?
     // TODO Change seller to better var name
     address payable public seller;
     address payable public buyer;
     
+    struct Seat {
+        //TODO Seat as a struct and not as own Contract
+    }
     
     constructor(string memory title_, string memory date_, uint8 available_seats_) {
         _title = title_;
@@ -27,6 +33,7 @@ contract TicketBookingSystem{
             Seat storage newStorage = Seat(title_, date_, 10, i, 1, "link")[i];
             seats.push(newStorage);
         }
+        
     }
     
     // Define a modifier for a function that only the buyer can call
@@ -58,6 +65,8 @@ contract TicketBookingSystem{
         seat = check_available_seats();
         seller.transfer(seat.price);
         seat.available_ = false;            //perhaps have seat[id] instead of only seat
+        
+        tickets.mint(buyer, 0); //TODO tokenid as increamtned number
     }
     
     // function for checking the next available seat
@@ -67,5 +76,6 @@ contract TicketBookingSystem{
                 return seats[i];
             } 
         }
+        
     }
 }
