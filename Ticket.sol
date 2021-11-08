@@ -17,6 +17,12 @@ contract Ticket is ERC721Burnable, Ownable{
     Counters.Counter private _tokenIds;
     uint256 startTime;
     Poster poster;
+    mapping(uint256 => saleInfo) public marketplace;
+
+    struct saleInfo{
+        uint256 price;
+        address buyer; //To enable "selling" for free but only to a predetermined address.
+    }
 
     constructor(string memory name, string memory symbol, uint256 _startTime) ERC721(name, symbol) {
         //setup counter to start at 1 to avoid cluttering the 0th seat ownership
@@ -62,7 +68,22 @@ contract Ticket is ERC721Burnable, Ownable{
         poster.mint(msg.sender, _tokenID);
     }
 
-    function tradeTicket
+    //TRADETICKET TO BE CALLED BY SELLER WHEN THEY WANT TO LIST THEIR TICKET FOR SALE
 
+    function tradeTicket(uint256 _tokenID, uint256 _price, address _buyer){
+        require( msg.sender == ownerOf(_tokenID) , "Only owner can call this.");
+        marketplace[_tokenID] = new saleInfo({price: _price, buyer: _buyer});
+        //Give ticket transfering rights to owner of contract as a "trusted 3rd part."
+        approve(owner(), _tokenID);
+    }
+    
+    /*This was meant as a way to list tickets for anyone to buy but how do we handle approval then?
+      Let's keep this as a thought process for now
+      
+    function tradeTicket(uint256 _tokenID, uint256 _price){
+        require( msg.sender == ownerOf(_tokenID) , "Only owner can call this.");
+        marketplace[_tokenID] = new saleInfo({price: _price, buyer: msg.sender});
+    }
+    */
 }
 

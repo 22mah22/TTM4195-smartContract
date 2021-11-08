@@ -97,4 +97,24 @@ contract TicketBookingSystem{
             }
         }
         return _seatFree;
+    }
+
+    //CALLED BY BUYER WHEN BUYING TICKET THAT IS FOR SALE
+    //require is used as actively as possible as that returns msg.value if it fails.
+
+    function tradeTicket(uint256 _tokenID){
+        require( msg.sender != ticket.ownerOf(_tokenID) , "Owner can't buy own token.");
+        require(ticket.marketplace[_tokenID] != 0, "Token requested is not for sale.");
+        //Not the most readable thing in the world but this checks that the token isn't reserved for someone else
+        require(ticket.marketplace[_tokenID].buyer == msg.sender || ticket.marketplace[_tokenID].buyer == ticket.ownerOf(_tokenID),
+         "You don't have permission to buy this token.");
+        require (msg.value >= ticket.marketplace[_tokenID].price, "Not enough Ethereum paid");
+
+        address payable seller = ownerOf(_tokenID);
+
+        //Safe transfer event, will only work if seller has approved transfer for ticket owner which should be this contract.
+        ticket.safeTransferFrom(ownerOf(_tokenID), msg.sender, _tokenID);
+        seller.transfer(msg.value);
+
+    }
 }
