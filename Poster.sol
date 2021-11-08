@@ -6,7 +6,7 @@ import "@openzeppelin/contracts/token/ERC721/ERC721.sol";
 import "@openzeppelin/contracts/access/Ownable.sol";
 
 contract Poster is ERC721, Ownable{
-    constructor(string eventName) ERC721(eventName, "PST"){
+    constructor(string memory eventName) ERC721(eventName, "PST"){
         //Sufficient
     }
     

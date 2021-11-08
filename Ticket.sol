@@ -36,33 +36,33 @@ contract Ticket is ERC721Burnable, Ownable{
     //Create public mint function that restricts minting to owner of ticket system.
     //Has to be done because the default _mint() func is private for obvious reasons.
     function mint(address _to) public onlyOwner returns(uint256){
-        _safeMint(_to, _tokenIds);
+        _safeMint(_to, _tokenIds.current());
         _tokenIds.increment();
-        return _tokenIds;
+        return _tokenIds.current();
     }
 
 
     //TODO: Improve feedback to function caller. Don't know if return is sufficient
 
-    function verify(uint256 _tokenID) returns(address, bool){
+    function verify(uint256 _tokenID) public returns(address, bool){
         //Calling built in func in ERC721
-        _tokenOwner = ownerOf(_tokenID);
+        address _tokenOwner = ownerOf(_tokenID);
         //Simple check to see if the event takes place in the future or not
-        _validity = (block.timestamp < startTime);
+        bool _validity = (block.timestamp < startTime);
         return (_tokenOwner, _validity);
     }
 
     modifier startSoon() {
-        int256 _secondsUntilStart = startTime - block.timestamp;
-        uint8 _zero = 0;
-        uint8 _hour = 3600;
+        uint256 _secondsUntilStart = startTime - block.timestamp;
+        uint16 _zero = 0;
+        uint16 _hour = 3600;
         //Must be less than an hour.
         require(_secondsUntilStart >= _zero, "Event must be in the future.");
         require(_secondsUntilStart <= _hour, "Event must begin in less than an hour.");
         _;
     }
     
-    function validate(uint256 _tokenID) startSoon{
+    function validate(uint256 _tokenID) public startSoon{
         //Since this is burnable, this should only be callable by token owner. Needs to be tested.
         burn(_tokenID);
         poster.mint(msg.sender, _tokenID);
@@ -70,9 +70,9 @@ contract Ticket is ERC721Burnable, Ownable{
 
     //TRADETICKET TO BE CALLED BY SELLER WHEN THEY WANT TO LIST THEIR TICKET FOR SALE
 
-    function tradeTicket(uint256 _tokenID, uint256 _price, address _buyer){
+    function tradeTicket(uint256 _tokenID, uint256 _price, address _buyer) public {
         require( msg.sender == ownerOf(_tokenID) , "Only owner can call this.");
-        marketplace[_tokenID] = new saleInfo({price: _price, buyer: _buyer});
+        marketplace[_tokenID] = saleInfo({price: _price, buyer: _buyer});
         //Give ticket transfering rights to owner of contract as a "trusted 3rd part."
         approve(owner(), _tokenID);
     }

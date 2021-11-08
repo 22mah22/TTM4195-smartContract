@@ -4,7 +4,7 @@ pragma solidity ^0.8.0;
 
 // import files
 // import "./Seat.sol"; //deprecated
-import "@bokkypoobah/BokkyPooBahsDateTimeLibrary/contracts/BokkyPooBahsDateTimeLibrary.sol";
+// import "@bokkypoobah/BokkyPooBahsDateTimeLibrary/contracts/BokkyPooBahsDateTimeLibrary.sol";
 import "./Ticket.sol";
 
 //General _variable convention is to leave the regular variable names for storage variables
@@ -42,7 +42,7 @@ contract TicketBookingSystem{
         available_seats = available_seats_;
         owner = msg.sender;
         //Ticket has been set up with ownage so owner address is automatically this smart contract
-        ticket = new Ticket(title, "TCK", seats[0].startTime);
+        ticket = new Ticket(title_, "TCK", seats[0].startTime);
     }
     
     // Define a modifier for a function that only the seller can call
@@ -51,8 +51,10 @@ contract TicketBookingSystem{
         _;
     }
     
+    
+    //TODO: What if price isn't always the price of the defaut seat?
     modifier paymentValid() {
-        require (msg.value >= price, "Not enough Ethereum paid");
+        require (msg.value >= seats[0].price, "Not enough Ethereum paid");
          _;
    }
     
@@ -60,18 +62,18 @@ contract TicketBookingSystem{
 
         //"Require()" will return the money to sender upon evaluating to false which is great
         require(check_available_seats(_seatRow, _seatNumber));
-        owner.transfer(seat.price);
-        uint256 ticket = tickets.mint(tx.origin);
+        uint256 newTicket = ticket.mint(tx.origin);
 
         Seat memory _seat = Seat({
-            title: _title,
+            title: seats[0].title,
             seatURL: "google.com",
             startTime: seats[0].startTime,
             price: seats[0].price,
             seatRow: _seatRow,
             seatNumber: _seatNumber,
-            ticketID: ticket});
+            ticketID: newTicket});
         
+        owner.transfer(_seat.price);
         seats.push(_seat);
     }
 
@@ -102,7 +104,7 @@ contract TicketBookingSystem{
     //CALLED BY BUYER WHEN BUYING TICKET THAT IS FOR SALE
     //require is used as actively as possible as that returns msg.value if it fails.
 
-    function tradeTicket(uint256 _tokenID){
+    function tradeTicket(uint256 _tokenID) public {
         require( msg.sender != ticket.ownerOf(_tokenID) , "Owner can't buy own token.");
         require(ticket.marketplace[_tokenID] != 0, "Token requested is not for sale.");
         //Not the most readable thing in the world but this checks that the token isn't reserved for someone else
@@ -110,10 +112,10 @@ contract TicketBookingSystem{
          "You don't have permission to buy this token.");
         require (msg.value >= ticket.marketplace[_tokenID].price, "Not enough Ethereum paid");
 
-        address payable seller = ownerOf(_tokenID);
+        address payable seller = ticket.ownerOf(_tokenID);
 
         //Safe transfer event, will only work if seller has approved transfer for ticket owner which should be this contract.
-        ticket.safeTransferFrom(ownerOf(_tokenID), msg.sender, _tokenID);
+        ticket.safeTransferFrom(ticket.ownerOf(_tokenID), msg.sender, _tokenID);
         seller.transfer(msg.value);
 
     }
