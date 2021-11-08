@@ -62,5 +62,7 @@ contract Ticket is ERC721Burnable, Ownable{
         poster.mint(msg.sender, _tokenID);
     }
 
+    function tradeTicket
+
 }
 

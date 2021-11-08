@@ -74,6 +74,15 @@ contract TicketBookingSystem{
         
         seats.push(_seat);
     }
+
+    function refund() public onlyOwner{
+        //Starts at 1 in order to not refund the "test seat" at [0].
+        for(uint32 i=1; i < seats.length; i++){               
+            (address payable _to, bool _valid) = ticket.verify(seats[i].ticketID);
+            //Is this sufficient since only owner has access to the function?
+            _to.transfer(seats[i].price);
+        }
+    }
     
     function check_available_seats(uint32 _seatRow, uint32 _seatNumber) private returns (bool){
         //Check if seat in seats[] already, if not:
