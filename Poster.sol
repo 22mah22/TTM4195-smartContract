@@ -3,14 +3,16 @@
 pragma solidity ^0.8.0;
 
 import "@openzeppelin/contracts/token/ERC721/ERC721.sol";
+import "@openzeppelin/contracts/access/Ownable.sol";
 
-contract Poster is ERC721{
-    constructor() ERC721("Poster", "PST"){
-        
+contract Poster is ERC721, Ownable{
+    constructor(string eventName) ERC721(eventName, "PST"){
+        //Sufficient
     }
     
-    function mint(address _to, uint256 _tokenId) external {
-        super._mint(_to, _tokenId);
+    //Sufficient as long as tokenId corresponds with the burned ticketID
+    function mint(address _to, uint256 _tokenID) external onlyOwner{
+         _safeMint(_to, _tokenID);
         }
 }
 

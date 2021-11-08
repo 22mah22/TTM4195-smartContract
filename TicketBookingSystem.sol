@@ -3,79 +3,89 @@
 pragma solidity ^0.8.0;
 
 // import files
-import "./Seat.sol";
+// import "./Seat.sol"; //deprecated
 import "@bokkypoobah/BokkyPooBahsDateTimeLibrary/contracts/BokkyPooBahsDateTimeLibrary.sol";
 import "./Ticket.sol";
-import "./Poster.sol";
+
+//General _variable convention is to leave the regular variable names for storage variables
+// prefacing with _ is normally used to differentiate the temporary variable from the permanent. 
 
 contract TicketBookingSystem{
-    string private _title;
-    string private _date;
-    uint8 private _available_seats;
+    address payable private owner;
+    uint32 private available_seats;
     Seat[] private seats;
-    Ticket private tickets = Ticket(available_seats_);
+    Ticket private ticket;
 
-    // Should this be in seat?
-    // TODO Change seller to better var name
-    address payable public seller;
-    address payable public buyer;
     
     struct Seat {
-        //TODO Seat as a struct and not as own Contract
+        string title;
+        string seatURL;
+        uint256 startTime;
+        uint256 price;
+        uint32 seatRow;
+        uint32 seatNumber;
+        uint256 ticketID;
     }
     
-    constructor(string memory title_, string memory date_, uint8 available_seats_) {
-        _title = title_;
-        _date = date_;
-        _available_seats = available_seats_;
-        seller = msg.sender;
-        for (uint i=0; i < _available_seats; i++){
-            Seat storage newStorage = Seat(title_, date_, 10, i, 1, "link")[i];
-            seats.push(newStorage);
-        }
-        
-    }
-    
-    // Define a modifier for a function that only the buyer can call
-    modifier onlyBuyer() {
-        require( msg.sender == buyer , "Only buyer can call this.");
-        _;
+    constructor(string memory title_, uint256 memory time_, uint32 available_seats_, uint256 price_) {
+        //Create non-existing seat 0 to store information about the event:
+        Seat memory _seat = Seat({
+            title: title_,
+            seatURL: "hurrdurr.dk",
+            startTime: time_,
+            price: price_,
+            seatRow: 0,
+            seatNumber: 0,
+            ticketID: 0});
+
+        seats.push(_seat);
+        available_seats = available_seats_;
+        owner = msg.sender;
+        //Ticket has been set up with ownage so owner address is automatically this smart contract
+        ticket = new Ticket(title, "TCK", seats[0].startTime);
     }
     
     // Define a modifier for a function that only the seller can call
-    modifier onlySeller() {
-        require( msg.sender == seller , "Only seller can call this.");
+    modifier onlyOwner() {
+        require( msg.sender == owner , "Only owner can call this.");
         _;
     }
     
     modifier paymentValid() {
-        require (msg.value >= _price, "not enough Ethereum paid");
+        require (msg.value >= price, "Not enough Ethereum paid");
          _;
    }
     
-    modifier condition(bool _condition) {
-        require(_condition);
-        _;
-    }
-    
-    // function to buy ticket of the next available seat
-    // TODO buy a token TICKET
-    function buy() public {
-        buyer = msg.sender;
-        seat = check_available_seats();
-        seller.transfer(seat.price);
-        seat.available_ = false;            //perhaps have seat[id] instead of only seat
+    function buy(uint32 _seatRow, uint32 _seatNumber) public paymentValid{
+
+        //"Require()" will return the money to sender upon evaluating to false which is great
+        require(check_available_seats(_seatRow, _seatNumber));
+        owner.transfer(seat.price);
+        uint256 ticket = tickets.mint(tx.origin);
+
+        Seat memory _seat = Seat({
+            title: _title,
+            seatURL: "google.com",
+            startTime: seats[0].startTime,
+            price: seats[0].price,
+            seatRow: _seatRow,
+            seatNumber: _seatNumber,
+            ticketID: ticket});
         
-        tickets.mint(buyer, 0); //TODO tokenid as increamtned number
+        seats.push(_seat);
     }
     
-    // function for checking the next available seat
-    function check_available_seats() private {
-        for(i=0; i <= available_seats_; i++){
-            if (seats[i].available_) {
-                return seats[i];
-            } 
+    function check_available_seats(uint32 _seatRow, uint32 _seatNumber) private returns (bool){
+        //Check if seat in seats[] already, if not:
+        //Mint TICKET for msg.sender
+        //Create seat with owner linked to TICKET
+
+        uint32 _numTakenSeats = seats.length;
+        bool _seatFree = true;
+        for(uint32 i=0; i < _numTakenSeats; i++){
+            if (seats[i].seatNumber == _seatNumber && seats[i].seatRow == _seatRow){
+                _seatFree = false;
+            }
         }
-        
-    }
+        return _seatFree;
 }
