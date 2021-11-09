@@ -27,7 +27,7 @@ contract TicketBookingSystem{
         uint256 ticketID;
     }
     
-    constructor(string memory title_, uint256 memory time_, uint32 available_seats_, uint256 price_) {
+    constructor(string memory title_, uint256 time_, uint32 available_seats_, uint256 price_) {
         //Create non-existing seat 0 to store information about the event:
         Seat memory _seat = Seat({
             title: title_,
@@ -40,7 +40,7 @@ contract TicketBookingSystem{
 
         seats.push(_seat);
         available_seats = available_seats_;
-        owner = msg.sender;
+        owner = payable(msg.sender);
         //Ticket has been set up with ownage so owner address is automatically this smart contract
         ticket = new Ticket(title_, "TCK", seats[0].startTime);
     }
@@ -58,11 +58,11 @@ contract TicketBookingSystem{
          _;
    }
     
-    function buy(uint32 _seatRow, uint32 _seatNumber) public paymentValid{
+    function buy(uint32 _seatRow, uint32 _seatNumber) public payable paymentValid{
 
         //"Require()" will return the money to sender upon evaluating to false which is great
         require(check_available_seats(_seatRow, _seatNumber));
-        uint256 newTicket = ticket.mint(tx.origin);
+        uint256 newTicket = ticket.mint(msg.sender);
 
         Seat memory _seat = Seat({
             title: seats[0].title,
@@ -82,16 +82,17 @@ contract TicketBookingSystem{
         for(uint32 i=1; i < seats.length; i++){               
             (address payable _to, bool _valid) = ticket.verify(seats[i].ticketID);
             //Is this sufficient since only owner has access to the function?
+            require(_valid);
             _to.transfer(seats[i].price);
         }
     }
     
-    function check_available_seats(uint32 _seatRow, uint32 _seatNumber) private returns (bool){
+    function check_available_seats(uint32 _seatRow, uint32 _seatNumber) private view returns (bool){
         //Check if seat in seats[] already, if not:
         //Mint TICKET for msg.sender
         //Create seat with owner linked to TICKET
 
-        uint32 _numTakenSeats = seats.length;
+        uint32 _numTakenSeats = uint32(seats.length);
         bool _seatFree = true;
         for(uint32 i=0; i < _numTakenSeats; i++){
             if (seats[i].seatNumber == _seatNumber && seats[i].seatRow == _seatRow){
@@ -104,15 +105,15 @@ contract TicketBookingSystem{
     //CALLED BY BUYER WHEN BUYING TICKET THAT IS FOR SALE
     //require is used as actively as possible as that returns msg.value if it fails.
 
-    function tradeTicket(uint256 _tokenID) public {
+    function tradeTicket(uint256 _tokenID) public payable{
         require( msg.sender != ticket.ownerOf(_tokenID) , "Owner can't buy own token.");
-        require(ticket.marketplace[_tokenID] != 0, "Token requested is not for sale.");
+        (uint256 _price, address _reserved,bool _exists) = ticket.getMarketplaceInfo(_tokenID);
+        require(_exists, "Token requested is not for sale.");
         //Not the most readable thing in the world but this checks that the token isn't reserved for someone else
-        require(ticket.marketplace[_tokenID].buyer == msg.sender || ticket.marketplace[_tokenID].buyer == ticket.ownerOf(_tokenID),
-         "You don't have permission to buy this token.");
-        require (msg.value >= ticket.marketplace[_tokenID].price, "Not enough Ethereum paid");
+        require(_reserved == msg.sender || _reserved == ticket.ownerOf(_tokenID), "You don't have permission to buy this token.");
+        require (msg.value >= _price, "Not enough Ethereum paid");
 
-        address payable seller = ticket.ownerOf(_tokenID);
+        address payable seller = payable(ticket.ownerOf(_tokenID));
 
         //Safe transfer event, will only work if seller has approved transfer for ticket owner which should be this contract.
         ticket.safeTransferFrom(ticket.ownerOf(_tokenID), msg.sender, _tokenID);

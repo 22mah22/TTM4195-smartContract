@@ -192,6 +192,35 @@
 			{
 				"inputs": [
 					{
+						"internalType": "uint256",
+						"name": "ticketID",
+						"type": "uint256"
+					}
+				],
+				"name": "getMarketplaceInfo",
+				"outputs": [
+					{
+						"internalType": "uint256",
+						"name": "",
+						"type": "uint256"
+					},
+					{
+						"internalType": "address",
+						"name": "",
+						"type": "address"
+					},
+					{
+						"internalType": "bool",
+						"name": "",
+						"type": "bool"
+					}
+				],
+				"stateMutability": "view",
+				"type": "function"
+			},
+			{
+				"inputs": [
+					{
 						"internalType": "address",
 						"name": "owner",
 						"type": "address"
@@ -232,6 +261,11 @@
 						"internalType": "address",
 						"name": "buyer",
 						"type": "address"
+					},
+					{
+						"internalType": "bool",
+						"name": "exists",
+						"type": "bool"
 					}
 				],
 				"stateMutability": "view",
@@ -511,7 +545,7 @@
 				"name": "verify",
 				"outputs": [
 					{
-						"internalType": "address",
+						"internalType": "address payable",
 						"name": "",
 						"type": "address"
 					},
@@ -521,7 +555,7 @@
 						"type": "bool"
 					}
 				],
-				"stateMutability": "nonpayable",
+				"stateMutability": "view",
 				"type": "function"
 			}
 		],
@@ -709,11 +743,11 @@
 			]
 		},
 		"Ticket.sol": {
-			"keccak256": "0x2b7d80f31f14746951ac0bcef32aabfea01a466e46dc15cf70900b80aa1c6bb0",
+			"keccak256": "0x1c7fb9c33a59d77ec47e4db80d7ed129d148b60f0ad2d244e150fa0675c22c8f",
 			"license": "MIT",
 			"urls": [
-				"bzz-raw://1032b94c5cc2a6d58c06c2d5d74a4887aa99a88e966fcf80199c5c1467590cad",
-				"dweb:/ipfs/QmbtiEUsvmvdZKbktSwQWRu2pxk9kpJTVs1uxNzgLPS5Zr"
+				"bzz-raw://de128de3540462994f04b775cca407f9cc690c537a46c9525b39392665919074",
+				"dweb:/ipfs/QmRCog3PimWkmb5sArQoJqj9SVSN8Mavkoz9QofSELYhsQ"
 			]
 		}
 	},

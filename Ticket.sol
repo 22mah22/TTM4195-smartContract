@@ -22,6 +22,7 @@ contract Ticket is ERC721Burnable, Ownable{
     struct saleInfo{
         uint256 price;
         address buyer; //To enable "selling" for free but only to a predetermined address.
+        bool exists;
     }
 
     constructor(string memory name, string memory symbol, uint256 _startTime) ERC721(name, symbol) {
@@ -44,12 +45,12 @@ contract Ticket is ERC721Burnable, Ownable{
 
     //TODO: Improve feedback to function caller. Don't know if return is sufficient
 
-    function verify(uint256 _tokenID) public returns(address, bool){
+    function verify(uint256 _tokenID) public view returns(address payable, bool){
         //Calling built in func in ERC721
         address _tokenOwner = ownerOf(_tokenID);
         //Simple check to see if the event takes place in the future or not
         bool _validity = (block.timestamp < startTime);
-        return (_tokenOwner, _validity);
+        return (payable(_tokenOwner), _validity);
     }
 
     modifier startSoon() {
@@ -67,12 +68,16 @@ contract Ticket is ERC721Burnable, Ownable{
         burn(_tokenID);
         poster.mint(msg.sender, _tokenID);
     }
+    
+     function getMarketplaceInfo(uint256 ticketID) public view returns (uint256, address, bool ) {
+        return (marketplace[ticketID].price, marketplace[ticketID].buyer, marketplace[ticketID].exists);
+    }    
 
     //TRADETICKET TO BE CALLED BY SELLER WHEN THEY WANT TO LIST THEIR TICKET FOR SALE
 
     function tradeTicket(uint256 _tokenID, uint256 _price, address _buyer) public {
         require( msg.sender == ownerOf(_tokenID) , "Only owner can call this.");
-        marketplace[_tokenID] = saleInfo({price: _price, buyer: _buyer});
+        marketplace[_tokenID] = saleInfo({price: _price, buyer: _buyer, exists: true});
         //Give ticket transfering rights to owner of contract as a "trusted 3rd part."
         approve(owner(), _tokenID);
     }
