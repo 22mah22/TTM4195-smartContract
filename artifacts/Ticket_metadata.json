@@ -743,11 +743,11 @@
 			]
 		},
 		"Ticket.sol": {
-			"keccak256": "0x1c7fb9c33a59d77ec47e4db80d7ed129d148b60f0ad2d244e150fa0675c22c8f",
+			"keccak256": "0xcdcfde3e11f5e635f22502951623255c37ee4d8299b9386c3bbcc0e65d49d954",
 			"license": "MIT",
 			"urls": [
-				"bzz-raw://de128de3540462994f04b775cca407f9cc690c537a46c9525b39392665919074",
-				"dweb:/ipfs/QmRCog3PimWkmb5sArQoJqj9SVSN8Mavkoz9QofSELYhsQ"
+				"bzz-raw://3a63bc3c2aa4d2e8c2a2e78f0f2e003558056ebd58f15157675626e4859d5599",
+				"dweb:/ipfs/Qmb1rCJhWYogUqCs7UpKMNMrkZ8izz7ZEVPuxdBZYgSPze"
 			]
 		}
 	},
