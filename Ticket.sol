@@ -27,7 +27,7 @@ contract Ticket is ERC721Burnable, Ownable{
 
     constructor(string memory name, string memory symbol, uint256 _startTime) ERC721(name, symbol) {
         //setup counter to start at 1 to avoid cluttering the 0th seat ownership
-        _tokenIds.increment();
+        //_tokenIds.increment(); 
         startTime = _startTime;
         poster = new Poster(name);
     }
@@ -37,15 +37,15 @@ contract Ticket is ERC721Burnable, Ownable{
     //Create public mint function that restricts minting to owner of ticket system.
     //Has to be done because the default _mint() func is private for obvious reasons.
     function mint(address _to) public onlyOwner returns(uint256){
-        _safeMint(_to, _tokenIds.current());
         _tokenIds.increment();
+        _safeMint(_to, _tokenIds.current());
         return _tokenIds.current();
     }
 
 
     //TODO: Improve feedback to function caller. Don't know if return is sufficient
 
-    function verify(uint256 _tokenID) public view returns(address payable, bool){
+    function verify(uint256 _tokenID) external view returns(address payable, bool){
         //Calling built in func in ERC721
         address _tokenOwner = ownerOf(_tokenID);
         //Simple check to see if the event takes place in the future or not
@@ -63,7 +63,7 @@ contract Ticket is ERC721Burnable, Ownable{
         _;
     }
     
-    function validate(uint256 _tokenID) public startSoon{
+    function validate(uint256 _tokenID) external startSoon{
         //Since this is burnable, this should only be callable by token owner. Needs to be tested.
         burn(_tokenID);
         poster.mint(msg.sender, _tokenID);
@@ -75,7 +75,7 @@ contract Ticket is ERC721Burnable, Ownable{
 
     //TRADETICKET TO BE CALLED BY SELLER WHEN THEY WANT TO LIST THEIR TICKET FOR SALE
 
-    function tradeTicket(uint256 _tokenID, uint256 _price, address _buyer) public {
+    function tradeTicket(uint256 _tokenID, uint256 _price, address _buyer) external {
         require( msg.sender == ownerOf(_tokenID) , "Only owner can call this.");
         marketplace[_tokenID] = saleInfo({price: _price, buyer: _buyer, exists: true});
         //Give ticket transfering rights to owner of contract as a "trusted 3rd part."

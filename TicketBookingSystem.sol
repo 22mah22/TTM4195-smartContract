@@ -61,7 +61,8 @@ contract TicketBookingSystem{
     function buy(uint32 _seatRow, uint32 _seatNumber) public payable paymentValid{
 
         //"Require()" will return the money to sender upon evaluating to false which is great
-        require(check_available_seats(_seatRow, _seatNumber));
+        require(seats.length < available_seats, "Event full");
+        require(check_available_seats(_seatRow, _seatNumber), "This seat is taken, dumbass");
         uint256 newTicket = ticket.mint(msg.sender);
 
         Seat memory _seat = Seat({
