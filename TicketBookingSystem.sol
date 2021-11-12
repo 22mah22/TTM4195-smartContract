@@ -94,6 +94,8 @@ contract TicketBookingSystem{
             require(_valid);
             _to.transfer(seats[i].price);
         }
+    // set available seats to zero so no further tickets can be bought
+    available_seats = 0;
     }
    
     function check_available_seats(uint32 _seatRow, uint32 _seatNumber) private view returns (bool){
