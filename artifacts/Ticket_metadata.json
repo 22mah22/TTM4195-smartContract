@@ -473,6 +473,24 @@
 						"internalType": "uint256",
 						"name": "_price",
 						"type": "uint256"
+					}
+				],
+				"name": "tradeTicket",
+				"outputs": [],
+				"stateMutability": "nonpayable",
+				"type": "function"
+			},
+			{
+				"inputs": [
+					{
+						"internalType": "uint256",
+						"name": "_tokenID",
+						"type": "uint256"
+					},
+					{
+						"internalType": "uint256",
+						"name": "_price",
+						"type": "uint256"
 					},
 					{
 						"internalType": "address",
@@ -743,11 +761,11 @@
 			]
 		},
 		"Ticket.sol": {
-			"keccak256": "0xcdcfde3e11f5e635f22502951623255c37ee4d8299b9386c3bbcc0e65d49d954",
+			"keccak256": "0xfda334bdd57ee8238de465841a46ceeaccd2fa068b7912f7e9f6c430ade6ed9b",
 			"license": "MIT",
 			"urls": [
-				"bzz-raw://3a63bc3c2aa4d2e8c2a2e78f0f2e003558056ebd58f15157675626e4859d5599",
-				"dweb:/ipfs/Qmb1rCJhWYogUqCs7UpKMNMrkZ8izz7ZEVPuxdBZYgSPze"
+				"bzz-raw://582a2c2b485c7d6db3b1a56b94bbc433f7d7020a395d4f1be2e69df94f2efc41",
+				"dweb:/ipfs/QmVGbx2sQfugWmfjcS2R8xz2Bdy9KVbBQhrZgi5nUwJvxW"
 			]
 		}
 	},

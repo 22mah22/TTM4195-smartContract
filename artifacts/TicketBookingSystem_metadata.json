@@ -202,11 +202,11 @@
 			]
 		},
 		"Ticket.sol": {
-			"keccak256": "0xcdcfde3e11f5e635f22502951623255c37ee4d8299b9386c3bbcc0e65d49d954",
+			"keccak256": "0x3e09812948047e057a98592a1b0dd2511387fea818a7a6b61d7f93be86834268",
 			"license": "MIT",
 			"urls": [
-				"bzz-raw://3a63bc3c2aa4d2e8c2a2e78f0f2e003558056ebd58f15157675626e4859d5599",
-				"dweb:/ipfs/Qmb1rCJhWYogUqCs7UpKMNMrkZ8izz7ZEVPuxdBZYgSPze"
+				"bzz-raw://49bd8bc8c7987aac22d728ce00f3e43b5eb26f16c9c8ad974b2900ad1e0a1147",
+				"dweb:/ipfs/QmTTqENZbTEHhQTF88JsgBCoFZtyGRqeJkiMZetCZ2LnpL"
 			]
 		},
 		"TicketBookingSystem.sol": {
