@@ -15,9 +15,9 @@ contract Ticket is ERC721Burnable, Ownable{
     //Create counter to keep track of how many tickets have been minted.
     using Counters for Counters.Counter;
     Counters.Counter private _tokenIds;
-    uint256 startTime;
-    Poster poster;
-    mapping(uint256 => saleInfo) public marketplace;
+    uint256 startTime;                                  // start time of event
+    Poster poster;                                      // poster smart contract
+    mapping(uint256 => saleInfo) public marketplace;    // mapping for trading tickets   
 
     struct saleInfo{
         uint256 price;
@@ -25,6 +25,7 @@ contract Ticket is ERC721Burnable, Ownable{
         bool exists;
     }
 
+    // constructor with start time of event and poster gets created 
     constructor(string memory name, string memory symbol, uint256 _startTime) ERC721(name, symbol) {
         //setup counter to start at 1 to avoid cluttering the 0th seat ownership
         //_tokenIds.increment(); 
@@ -42,9 +43,7 @@ contract Ticket is ERC721Burnable, Ownable{
         return _tokenIds.current();
     }
 
-
-    //TODO: Improve feedback to function caller. Don't know if return is sufficient
-
+    // function to verify ticket 
     function verify(uint256 _tokenID) external view returns(address payable, bool){
         //Calling built in func in ERC721
         address _tokenOwner = ownerOf(_tokenID);
@@ -53,6 +52,7 @@ contract Ticket is ERC721Burnable, Ownable{
         return (payable(_tokenOwner), _validity);
     }
 
+    //modifier to check if current time is in a specific time interval before the event (here 1 hour before event)
     modifier startSoon() {
         uint256 _secondsUntilStart = startTime - block.timestamp;
         uint16 _zero = 0;
@@ -63,8 +63,9 @@ contract Ticket is ERC721Burnable, Ownable{
         _;
     }
     
+    // validate ticket and burn it. mint a poster.
     function validate(uint256 _tokenID) external startSoon{
-        //Since this is burnable, this should only be callable by token owner. Needs to be tested.
+        //Since this is burnable, this should only be callable by token owner.
         burn(_tokenID);
         poster.mint(msg.sender, _tokenID);
     }
@@ -75,6 +76,7 @@ contract Ticket is ERC721Burnable, Ownable{
 
     //TRADETICKET TO BE CALLED BY SELLER WHEN THEY WANT TO LIST THEIR TICKET FOR SALE
 
+    // Trade ticket when buyer is a specific address(person)
     function tradeTicket(uint256 _tokenID, uint256 _price, address _buyer) external {
         require( msg.sender == ownerOf(_tokenID) , "Only owner can call this.");
         marketplace[_tokenID] = saleInfo({price: _price, buyer: _buyer, exists: true});
@@ -82,6 +84,7 @@ contract Ticket is ERC721Burnable, Ownable{
         approve(owner(), _tokenID);
     }
     
+    // Trade ticket when seller only wants to sell it but not to a specific person
     function tradeTicket(uint256 _tokenID, uint256 _price) external {
         require( msg.sender == ownerOf(_tokenID) , "Only owner can call this.");
         marketplace[_tokenID] = saleInfo({price: _price, buyer: msg.sender, exists: true});
