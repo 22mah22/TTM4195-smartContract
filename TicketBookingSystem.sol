@@ -15,6 +15,7 @@ contract TicketBookingSystem{
     uint32 private available_seats;     // number of available seats in event
     Seat[] private seats;               // seat list
     Ticket private ticket;              // ticket for event
+    bool private cancelled;             // bool for preventing double refunding
 
     // seat struct with all the informations needed in a seat
     struct Seat {
@@ -87,6 +88,7 @@ contract TicketBookingSystem{
     
     // refund the tickets. (only owner of event can refund the tickets)
     function refund() public onlyOwner{
+        require(cancelled == false, "Event already cancelled, tickets can't be refunded twice");
         //Starts at 1 in order to not refund the "test seat" at [0].
         for(uint32 i=1; i < seats.length; i++){               
             (address payable _to, bool _valid) = ticket.verify(seats[i].ticketID);
@@ -94,8 +96,9 @@ contract TicketBookingSystem{
             require(_valid);
             _to.transfer(seats[i].price);
         }
-    // set available seats to zero so no further tickets can be bought
-    available_seats = 0;
+        // set available seats to zero so no further tickets can be bought
+        available_seats = 0;
+        cancelled = true;
     }
    
     function check_available_seats(uint32 _seatRow, uint32 _seatNumber) private view returns (bool){
