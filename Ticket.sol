@@ -69,7 +69,7 @@ contract Ticket is ERC721Burnable, Ownable{
         poster.mint(msg.sender, _tokenID);
     }
     
-     function getMarketplaceInfo(uint256 ticketID) public view returns (uint256, address, bool ) {
+    function getMarketplaceInfo(uint256 ticketID) public view returns (uint256, address, bool ) {
         return (marketplace[ticketID].price, marketplace[ticketID].buyer, marketplace[ticketID].exists);
     }    
 
@@ -78,6 +78,13 @@ contract Ticket is ERC721Burnable, Ownable{
     function tradeTicket(uint256 _tokenID, uint256 _price, address _buyer) external {
         require( msg.sender == ownerOf(_tokenID) , "Only owner can call this.");
         marketplace[_tokenID] = saleInfo({price: _price, buyer: _buyer, exists: true});
+        //Give ticket transfering rights to owner of contract as a "trusted 3rd part."
+        approve(owner(), _tokenID);
+    }
+    
+    function tradeTicket(uint256 _tokenID, uint256 _price) external {
+        require( msg.sender == ownerOf(_tokenID) , "Only owner can call this.");
+        marketplace[_tokenID] = saleInfo({price: _price, buyer: msg.sender, exists: true});
         //Give ticket transfering rights to owner of contract as a "trusted 3rd part."
         approve(owner(), _tokenID);
     }
