@@ -11,12 +11,12 @@ import "./Ticket.sol";
 // prefacing with _ is normally used to differentiate the temporary variable from the permanent. 
 
 contract TicketBookingSystem{
-    address payable private owner;
-    uint32 private available_seats;
-    Seat[] private seats;
-    Ticket private ticket;
+    address payable private owner;      // owner of the event
+    uint32 private available_seats;     // number of available seats in event
+    Seat[] private seats;               // seat list
+    Ticket private ticket;              // ticket for event
 
-    
+    // seat struct with all the informations needed in a seat
     struct Seat {
         string title;
         string seatURL;
@@ -38,6 +38,7 @@ contract TicketBookingSystem{
             seatNumber: 0,
             ticketID: 0});
 
+        // push 0 seat to seat list
         seats.push(_seat);
         available_seats = available_seats_;
         owner = payable(msg.sender);
@@ -53,6 +54,7 @@ contract TicketBookingSystem{
     
     
     //TODO: What if price isn't always the price of the defaut seat?
+    // ckecks if enough ethereum is paid for the ticket
     modifier paymentValid() {
         require (msg.value >= seats[0].price, "Not enough Ethereum paid");
          _;
@@ -61,10 +63,14 @@ contract TicketBookingSystem{
     function buy(uint32 _seatRow, uint32 _seatNumber) public payable paymentValid{
 
         //"Require()" will return the money to sender upon evaluating to false which is great
+        // checks if event is already full
         require(seats.length < available_seats, "Event full");
-        require(check_available_seats(_seatRow, _seatNumber), "This seat is taken, dumbass");
+        // ckecks if seat is already taken. (ticket owned by another person)
+        require(check_available_seats(_seatRow, _seatNumber), "This seat is taken");
+        // mint new ticket
         uint256 newTicket = ticket.mint(msg.sender);
 
+        // creates seat
         Seat memory _seat = Seat({
             title: seats[0].title,
             seatURL: "google.com",
@@ -74,10 +80,12 @@ contract TicketBookingSystem{
             seatNumber: _seatNumber,
             ticketID: newTicket});
         
+        //transfer the ether and push seat to seat list
         owner.transfer(_seat.price);
         seats.push(_seat);
     }
-
+    
+    // refund the tickets. (only owner of event can refund the tickets)
     function refund() public onlyOwner{
         //Starts at 1 in order to not refund the "test seat" at [0].
         for(uint32 i=1; i < seats.length; i++){               
@@ -87,7 +95,7 @@ contract TicketBookingSystem{
             _to.transfer(seats[i].price);
         }
     }
-    
+   
     function check_available_seats(uint32 _seatRow, uint32 _seatNumber) private view returns (bool){
         //Check if seat in seats[] already, if not:
         //Mint TICKET for msg.sender
@@ -107,12 +115,16 @@ contract TicketBookingSystem{
     //require is used as actively as possible as that returns msg.value if it fails.
 
     function tradeTicket(uint256 _tokenID) public payable{
+        // check that owner of ticket dont buy his/her own ticket
         require( msg.sender != ticket.ownerOf(_tokenID) , "Owner can't buy own token.");
+        // get information out of mapping in ticket contract with getMarketplaceInfo
         (uint256 _price, address _reserved,bool _exists) = ticket.getMarketplaceInfo(_tokenID);
+        // check if ticket is on sale
         require(_exists, "Token requested is not for sale.");
         //Not the most readable thing in the world but this checks that the token isn't reserved for someone else
         require(_reserved == msg.sender || _reserved == ticket.ownerOf(_tokenID), "You don't have permission to buy this token.");
-        require (msg.value >= _price, "Not enough Ethereum paid");
+        // if enough ether is paid
+        require (msg.value >= _price, "Not enough Ether paid");
 
         address payable seller = payable(ticket.ownerOf(_tokenID));
 
