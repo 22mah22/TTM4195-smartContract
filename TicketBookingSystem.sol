@@ -21,14 +21,14 @@ contract TicketBookingSystem{
     struct Seat {
         string title;
         string seatURL;
-        uint256 startTime;
-        uint256 price;
+        uint64 startTime;
+        uint128 price;
         uint32 seatRow;
         uint32 seatNumber;
         uint256 ticketID;
     }
     
-    constructor(string memory title_, uint256 time_, uint32 available_seats_, uint256 price_) {
+    constructor(string memory title_, uint256 time_, uint32 available_seats_, uint128 price_) {
         //Create non-existing seat 0 to store information about the event:
         Seat memory _seat = Seat({
             title: title_,
