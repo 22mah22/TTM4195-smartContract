@@ -15,12 +15,12 @@ contract Ticket is ERC721Burnable, Ownable{
     //Create counter to keep track of how many tickets have been minted.
     using Counters for Counters.Counter;
     Counters.Counter private _tokenIds;
-    uint256 startTime;                                  // start time of event
-    Poster poster;                                      // poster smart contract
+    uint64 startTime;                                  // start time of event
+    Poster poster;                                     // poster smart contract
     mapping(uint256 => saleInfo) public marketplace;    // mapping for trading tickets   
 
     struct saleInfo{
-        uint256 price;
+        uint128 price;
         address buyer; //To enable "selling" for free but only to a predetermined address.
         bool exists;
     }
@@ -77,7 +77,7 @@ contract Ticket is ERC721Burnable, Ownable{
     //TRADETICKET TO BE CALLED BY SELLER WHEN THEY WANT TO LIST THEIR TICKET FOR SALE
 
     // Trade ticket when buyer is a specific address(person)
-    function tradeTicket(uint256 _tokenID, uint256 _price, address _buyer) external {
+    function tradeTicket(uint256 _tokenID, uint128 _price, address _buyer) external {
         require( msg.sender == ownerOf(_tokenID) , "Only owner can call this.");
         marketplace[_tokenID] = saleInfo({price: _price, buyer: _buyer, exists: true});
         //Give ticket transfering rights to owner of contract as a "trusted 3rd part."
@@ -85,7 +85,7 @@ contract Ticket is ERC721Burnable, Ownable{
     }
     
     // Trade ticket when seller only wants to sell it but not to a specific person
-    function tradeTicket(uint256 _tokenID, uint256 _price) external {
+    function tradeTicket(uint256 _tokenID, uint128 _price) external {
         require( msg.sender == ownerOf(_tokenID) , "Only owner can call this.");
         marketplace[_tokenID] = saleInfo({price: _price, buyer: msg.sender, exists: true});
         //Give ticket transfering rights to owner of contract as a "trusted 3rd part."
@@ -95,7 +95,7 @@ contract Ticket is ERC721Burnable, Ownable{
     /*This was meant as a way to list tickets for anyone to buy but how do we handle approval then?
       Let's keep this as a thought process for now
       
-    function tradeTicket(uint256 _tokenID, uint256 _price){
+    function tradeTicket(uint256 _tokenID, uint128 _price){
         require( msg.sender == ownerOf(_tokenID) , "Only owner can call this.");
         marketplace[_tokenID] = new saleInfo({price: _price, buyer: msg.sender});
     }
