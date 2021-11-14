@@ -15,7 +15,7 @@ contract Poster is ERC721, AccessControlEnumerable, Ownable{
     mapping(string => uint256[]) public eventTracker;
     
     constructor() ERC721("Poster", "PST"){
-        //
+         _setupRole(DEFAULT_ADMIN_ROLE, _msgSender());
     }
     
     function approveMinter(address eventOwner) public onlyOwner{
