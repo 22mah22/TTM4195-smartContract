@@ -6,64 +6,60 @@
 	"output": {
 		"abi": [
 			{
-				"inputs": [
-					{
-						"internalType": "string",
-						"name": "title_",
-						"type": "string"
-					},
-					{
-						"internalType": "uint256",
-						"name": "time_",
-						"type": "uint256"
-					},
-					{
-						"internalType": "uint32",
-						"name": "available_seats_",
-						"type": "uint32"
-					},
-					{
-						"internalType": "uint256",
-						"name": "price_",
-						"type": "uint256"
-					},
-					{
-						"internalType": "contract Poster",
-						"name": "poster_",
-						"type": "address"
-					}
-				],
+				"inputs": [],
 				"stateMutability": "nonpayable",
 				"type": "constructor"
 			},
 			{
+				"anonymous": false,
 				"inputs": [
 					{
-						"internalType": "uint32",
-						"name": "_seatRow",
-						"type": "uint32"
+						"indexed": true,
+						"internalType": "address",
+						"name": "previousOwner",
+						"type": "address"
+					},
+					{
+						"indexed": true,
+						"internalType": "address",
+						"name": "newOwner",
+						"type": "address"
+					}
+				],
+				"name": "OwnershipTransferred",
+				"type": "event"
+			},
+			{
+				"inputs": [
+					{
+						"internalType": "string",
+						"name": "_title",
+						"type": "string"
+					},
+					{
+						"internalType": "uint256",
+						"name": "_time",
+						"type": "uint256"
 					},
 					{
 						"internalType": "uint32",
-						"name": "_seatNumber",
+						"name": "_available_seats",
 						"type": "uint32"
+					},
+					{
+						"internalType": "uint256",
+						"name": "_price",
+						"type": "uint256"
 					}
 				],
-				"name": "buy",
-				"outputs": [],
-				"stateMutability": "payable",
-				"type": "function"
-			},
-			{
-				"inputs": [],
-				"name": "refund",
+				"name": "newEvent",
 				"outputs": [],
 				"stateMutability": "nonpayable",
 				"type": "function"
 			},
 			{
 				"inputs": [],
-				"name": "ticketAddress",
+				"name": "owner",
 				"outputs": [
 					{
 						"internalType": "address",
@@ -75,22 +71,39 @@
 				"type": "function"
 			},
 			{
+				"inputs": [],
+				"name": "renounceOwnership",
+				"outputs": [],
+				"stateMutability": "nonpayable",
+				"type": "function"
+			},
+			{
 				"inputs": [
 					{
-						"internalType": "uint256",
-						"name": "_tokenID",
-						"type": "uint256"
+						"internalType": "address",
+						"name": "newOwner",
+						"type": "address"
 					}
 				],
-				"name": "tradeTicket",
+				"name": "transferOwnership",
 				"outputs": [],
-				"stateMutability": "payable",
+				"stateMutability": "nonpayable",
 				"type": "function"
 			}
 		],
 		"devdoc": {
 			"kind": "dev",
-			"methods": {},
+			"methods": {
+				"owner()": {
+					"details": "Returns the address of the current owner."
+				},
+				"renounceOwnership()": {
+					"details": "Leaves the contract without owner. It will not be possible to call `onlyOwner` functions anymore. Can only be called by the current owner. NOTE: Renouncing ownership will leave the contract without an owner, thereby removing any functionality that is only available to the owner."
+				},
+				"transferOwnership(address)": {
+					"details": "Transfers ownership of the contract to a new account (`newOwner`). Can only be called by the current owner."
+				}
+			},
 			"version": 1
 		},
 		"userdoc": {
@@ -101,7 +114,7 @@
 	},
 	"settings": {
 		"compilationTarget": {
-			"TicketBookingSystem.sol": "TicketBookingSystem"
+			"Factory.sol": "Factory"
 		},
 		"evmVersion": "london",
 		"libraries": {},
@@ -109,7 +122,7 @@
 			"bytecodeHash": "ipfs"
 		},
 		"optimizer": {
-			"enabled": false,
+			"enabled": true,
 			"runs": 200
 		},
 		"remappings": []
@@ -249,6 +262,14 @@
 			"urls": [
 				"bzz-raw://12961fd593c79b60088c8829fd760db4149790b1c702411919fac76769e8c39a",
 				"dweb:/ipfs/QmXN79ZS3btSrPhiMBWtWmdwaWKjYTaAYpVMt5QHvwwKMw"
+			]
+		},
+		"Factory.sol": {
+			"keccak256": "0x7a8eb9fa157b05974a217cea17b586e1b9dfc03ca49f151460fa271453de2e11",
+			"license": "GPL-3.0",
+			"urls": [
+				"bzz-raw://f351131956d38549ced08a3eafc3401aab0f6952126fe4ea7fc2eaf9fbef26d6",
+				"dweb:/ipfs/QmeEgj1J28raPHwHHYxVYFhnirWczkQ1cFty2B88aL7KoT"
 			]
 		},
 		"Poster.sol": {
