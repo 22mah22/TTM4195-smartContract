@@ -26,7 +26,7 @@ contract Factory is Ownable{
         That way, burning of a ticket can be equivalent to minting a poster, which is very useful for us.
     */
     
-    function newEvent(string memory _title, uint256 _time, uint32 _available_seats, uint256 _price) public onlyOwner{
+    function newEvent(string memory _title, uint64 _time, uint32 _available_seats, uint128 _price) public onlyOwner{
         TicketBookingSystem sys = new TicketBookingSystem(_title, _time, _available_seats, _price, poster);
         events.push(sys);
         poster.approveMinter(sys.ticketAddress());
