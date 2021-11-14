@@ -18,18 +18,18 @@ contract Ticket is ERC721Burnable, Ownable{
     using Counters for Counters.Counter;
     Counters.Counter private _tokenIds;
     
-    uint256 startTime;                                  //  Start time of event
+    uint64 startTime;                                  //  Start time of event
     Poster poster;                                      //  Poster smart contract
     mapping(uint256 => saleInfo) public marketplace;    //  Mapping for trading tickets   
 
     struct saleInfo{
-        uint256 price;
+        uint128 price;
         address buyer; //   To enable "selling" for free but only to a predetermined address.
         bool exists;
     }
 
     //  Constructor with start time of event and poster gets created 
-    constructor(string memory name, string memory symbol, uint256 _startTime, Poster _poster) ERC721(name, symbol) {
+    constructor(string memory name, string memory symbol, uint64 _startTime, Poster _poster) ERC721(name, symbol) {
         startTime = _startTime;
         poster = _poster;
     }
@@ -59,7 +59,7 @@ contract Ticket is ERC721Burnable, Ownable{
 
     //  Modifier to check if current time is in a specific time interval before the event (here 1 hour before event)
     modifier startSoon() {
-        uint256 _secondsUntilStart = startTime - block.timestamp;
+        uint64 _secondsUntilStart = startTime - block.timestamp;
         uint16 _zero = 0;
         uint16 _hour = 3600;
         //  Must be less than an hour.
@@ -79,7 +79,7 @@ contract Ticket is ERC721Burnable, Ownable{
     }
     
     //  Struct info is not accessible across contracts so this helper function extracts the struct as a tuple
-    function getMarketplaceInfo(uint256 ticketID) public view returns (uint256, address, bool ) {
+    function getMarketplaceInfo(uint256 ticketID) public view returns (uint128, address, bool ) {
         return (marketplace[ticketID].price, marketplace[ticketID].buyer, marketplace[ticketID].exists);
     }    
 
@@ -90,7 +90,7 @@ contract Ticket is ERC721Burnable, Ownable{
         Gives the owner (the booking system) permission to transfer the users token. 
         
     */
-    function tradeTicket(uint256 _tokenID, uint256 _price, address _buyer) external {
+    function tradeTicket(uint256 _tokenID, uint128 _price, address _buyer) external {
         require( msg.sender == ownerOf(_tokenID) , "Only owner can call this.");
         marketplace[_tokenID] = saleInfo({price: _price, buyer: _buyer, exists: true});
         //  Give ticket transfering rights to owner of contract as a "trusted 3rd part."
@@ -98,7 +98,7 @@ contract Ticket is ERC721Burnable, Ownable{
     }
     
     // Trade ticket when seller only wants to sell it but not to a specific person
-    function tradeTicket(uint256 _tokenID, uint256 _price) external {
+    function tradeTicket(uint256 _tokenID, uint128 _price) external {
         require( msg.sender == ownerOf(_tokenID) , "Only owner can call this.");
         //  If no reserved buyer is given, the "reserved" address is set to the sellers own which is used for a check when buying.
         marketplace[_tokenID] = saleInfo({price: _price, buyer: msg.sender, exists: true});
