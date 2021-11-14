@@ -20,14 +20,14 @@ contract TicketBookingSystem{
     struct Seat {                   
         string title;                   // Title of the event
         string seatURL;                 // URL for seat view service.
-        uint256 startTime;              // Start time given in epoch timestamp
-        uint256 price;                  // Price per seat. For now, all seats cost the same but this can be changed
+        uint64 startTime;              // Start time given in epoch timestamp
+        uint128 price;                  // Price per seat. For now, all seats cost the same but this can be changed
         uint32 seatRow;                 // Seat row
         uint32 seatNumber;              // Seat number
         uint256 ticketID;               // ID of the ticket that owns the seat. 
     }
     
-    constructor(string memory title_, uint256 time_, uint32 available_seats_, uint256 price_, Poster poster_) {
+    constructor(string memory title_, uint64 time_, uint32 available_seats_, uint128 price_, Poster poster_) {
         // Create non-existing seat 0 to store information about the event:
         Seat memory _seat = Seat({
             title: title_,
@@ -146,7 +146,7 @@ contract TicketBookingSystem{
     */
     function tradeTicket(uint256 _tokenID) public payable{
         require( msg.sender != ticket.ownerOf(_tokenID) , "Owner can't buy own token.");
-        (uint256 _price, address _reserved, bool _exists) = ticket.getMarketplaceInfo(_tokenID);
+        (uint128 _price, address _reserved, bool _exists) = ticket.getMarketplaceInfo(_tokenID);
         require(_exists, "Token requested is not for sale.");
         require(_reserved == msg.sender || _reserved == ticket.ownerOf(_tokenID), "You don't have permission to buy this token.");
         require (msg.value >= _price, "Not enough Ether paid");
