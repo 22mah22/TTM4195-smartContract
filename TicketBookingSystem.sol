@@ -45,7 +45,7 @@ contract TicketBookingSystem{
         available_seats = available_seats_;
         owner = payable(tx.origin);
         
-        //Initialize a ticket smart contract with the booking system as the owner of the contract.
+        //  Initialize a ticket smart contract with the booking system as the owner of the contract.
         ticket = new Ticket(title_, "TCK", seats[0].startTime, poster_);
     }
     
@@ -101,7 +101,7 @@ contract TicketBookingSystem{
     /* 
         Refund the tickets. (Only owner of event can refund the tickets)
         Security checks:
-            - Only the owner of the contract can refund.
+            - Only the owner of the contract can refund. (modifier)
             - Refunding of an empty event is made impossible to restrict double refunding.
     */
     function refund() public onlyOwner{
@@ -110,8 +110,9 @@ contract TicketBookingSystem{
         for(uint32 i=1; i < seats.length; i++){               
             (address payable _to, bool _valid) = ticket.verify(seats[i].ticketID);
             //   Requiring validity means you can't refund expired tickets. This could perhaps be useful?
-            require(_valid);
-            _to.transfer(seats[i].price);
+            if(_valid){
+                _to.transfer(seats[i].price);
+            }
         }
         //  Set available seats to zero so no further tickets can be bought
         available_seats = 0;

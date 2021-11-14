@@ -46,19 +46,23 @@ contract Ticket is ERC721Burnable, Ownable{
 
     // function to verify ticket 
     function verify(uint256 _tokenID) external view returns(address payable, bool){
-        //Calling built in func in ERC721
+        //  Checking if the token exists / if it has been burned.
+        if (_exists(_tokenID) != true){
+            return (payable(address(this)), false);
+        }
+        //  ownerOf() will never fail as long as the token exists.
         address _tokenOwner = ownerOf(_tokenID);
-        //Simple check to see if the event takes place in the future or not
+        //  Simple check to see if the event takes place in the future or not
         bool _validity = (block.timestamp < startTime);
         return (payable(_tokenOwner), _validity);
     }
 
-    //modifier to check if current time is in a specific time interval before the event (here 1 hour before event)
+    //  Modifier to check if current time is in a specific time interval before the event (here 1 hour before event)
     modifier startSoon() {
         uint256 _secondsUntilStart = startTime - block.timestamp;
         uint16 _zero = 0;
         uint16 _hour = 3600;
-        //Must be less than an hour.
+        //  Must be less than an hour.
         require(_secondsUntilStart >= _zero, "Event must be in the future.");
         require(_secondsUntilStart <= _hour, "Event must begin in less than an hour.");
         _;
@@ -89,16 +93,16 @@ contract Ticket is ERC721Burnable, Ownable{
     function tradeTicket(uint256 _tokenID, uint256 _price, address _buyer) external {
         require( msg.sender == ownerOf(_tokenID) , "Only owner can call this.");
         marketplace[_tokenID] = saleInfo({price: _price, buyer: _buyer, exists: true});
-        //Give ticket transfering rights to owner of contract as a "trusted 3rd part."
+        //  Give ticket transfering rights to owner of contract as a "trusted 3rd part."
         approve(owner(), _tokenID);
     }
     
     // Trade ticket when seller only wants to sell it but not to a specific person
     function tradeTicket(uint256 _tokenID, uint256 _price) external {
         require( msg.sender == ownerOf(_tokenID) , "Only owner can call this.");
-        //If no reserved buyer is given, the "reserved" address is set to the sellers own which is used for a check when buying.
+        //  If no reserved buyer is given, the "reserved" address is set to the sellers own which is used for a check when buying.
         marketplace[_tokenID] = saleInfo({price: _price, buyer: msg.sender, exists: true});
-        //Give ticket transfering rights to owner of contract as a "trusted 3rd part."
+        //  Give ticket transfering rights to owner of contract as a "trusted 3rd part."
         approve(owner(), _tokenID);
     }
     
