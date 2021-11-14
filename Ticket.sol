@@ -59,7 +59,7 @@ contract Ticket is ERC721Burnable, Ownable{
 
     //  Modifier to check if current time is in a specific time interval before the event (here 1 hour before event)
     modifier startSoon() {
-        uint64 _secondsUntilStart = startTime - block.timestamp;
+        uint256 _secondsUntilStart = startTime - block.timestamp;
         uint16 _zero = 0;
         uint16 _hour = 3600;
         //  Must be less than an hour.
